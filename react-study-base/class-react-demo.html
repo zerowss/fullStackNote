@@ -1,43 +1,81 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title></title>
     <script src="js/react.development.js"></script>
     <script src="js/react-dom.development.js"></script>
     <script src="js/babel.min.js"></script>
+    <script src="js/data.js"></script>
+    <title>Class react demo</title>
+    <style type="text/css" media="screen">
+      .list-item{
+        background:#ccc;
+        border: 1px solid #ccc;
+      }
+      .list-item h3{
+        
+      }
+      .list-item ul{
+        list-style: none;
+      }
+      .name{
+        color: blue;
+        font-weight: 700;
+      }
+    </style>
   </head>
   <body>
     <div id="app">
+      
     </div>
-  </body>
-  <script type="text/babel">
-    const names = ['a','b','c']; 
-    const named = ['d','e','f']; 
-    
-    class List extends React.Component {
+    <script type="text/babel">
+      let obj = data; 
 
-      render(){
-        return this.props.data.map((item,index)=>{
-          return <li key={index} >{item}</li>;
-        })
+      console.log(obj,'obj');
+      
+      class LiItem extends React.Component{
+        render(){
+          console.log(this.props.data,'liItem')
+          return this.props.data.map((item,index)=>{
+            return (
+              <li key={index}>
+                <p className="name">{item.name}</p>
+                <p className="memo">{item.memo}</p>
+              </li>
+            )
+          })
+        }
       }
-    }
-    ReactDOM.render(
-      <div>
-        <ul>
-          <List data={names} />
-        </ul>
-        <ul>
-          <List data={named} />
-        </ul>
-      </div>,
-      document.getElementById('app')
+      
+      class ListItem extends React.Component{
+        render(){
+          console.log(this.props.data,'listitem');
+            return (
+              <div className="list-item">
+                <h3>{this.props.data.title}</h3>
+                <ul>
+                  <LiItem data={this.props.data.list} />
+                </ul>
+              </div>
+            ) 
+        }
+      }
+      class Panel extends React.Component{
+          render(){
+            console.log(this.props.data,'panel');
+            return this.props.data.map((item,index)=>{
+              return <ListItem data={item} key={index} />
+            }) 
+          }
+      }
 
-    )
+      ReactDOM.render(
+        <Panel data={obj} />,
+        document.getElementById('app')
+      )
+    </script>
 
-  </script>
+  </body>
+  
 </html>
