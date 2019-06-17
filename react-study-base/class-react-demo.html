@@ -11,7 +11,7 @@
     <style type="text/css" media="screen">
       .list-item{
         background:#ccc;
-        border: 1px solid #ccc;
+        border: 2px solid #ccc;
       }
       .list-item h3{
         
@@ -22,6 +22,15 @@
       .name{
         color: blue;
         font-weight: 700;
+      }
+      .list-content{
+        background: #fff;
+        border:1px solid #eee;
+      }
+      .list-wrap{
+        height:0;
+        transition: .5s;
+        overflow: hidden;
       }
     </style>
   </head>
@@ -49,23 +58,89 @@
       }
       
       class ListItem extends React.Component{
+        constructor(props){
+          super(props);
+          this.state = {
+            show: this.props.show 
+          }
+        }
+        changeShow(){
+          this.setState({
+            show: !this.state.show
+          })
+          if(!this.state.show){
+            this.props.onChange(this.props.index); 
+          }
+        }
+
+        showList(status){
+          const showL = this.refs.list;
+          const h = showL.scrollHeight;
+          if(status){
+            showL.style.height = h + 'px';
+          }else{ 
+            showL.style.height = 0;
+          }
+        }
+        componentDidMount(){
+          console.log('组件挂在完成')  
+          this.showList(this.state.show);
+        }
+
+        shouldComponentUpdate(nextProps,nextState){
+          if(this.state.show !== nextProps.show){
+            this.setState({
+              show: nextProps.show
+            })
+          }
+          if(nextState.show != this.state.show){
+            this.showList(nextState.show);
+          }
+          return false;
+        }
         render(){
           console.log(this.props.data,'listitem');
             return (
               <div className="list-item">
-                <h3>{this.props.data.title}</h3>
-                <ul>
-                  <LiItem data={this.props.data.list} />
-                </ul>
+                <h3 onClick={this.changeShow.bind(this)}>{this.props.data.title}</h3>
+                <div className="list-wrap" ref="list">
+                  <ul className="list-content">
+                    <LiItem data={this.props.data.list} />
+                  </ul>
+                </div>
               </div>
             ) 
         }
       }
       class Panel extends React.Component{
+          constructor(props){
+            super(props);
+            this.state = {
+              showList:[true,false,false]
+            }
+            this.changeItem = this.changeItem.bind(this);
+          }
+
+          changeItem(index){
+            console.log('changeItem')
+            let showList = this.state.showList.map((item,i)=>{
+              if(i === index){
+                return true;
+              }else{
+                return false;
+              }
+            });
+            this.setState({showList})
+          }
           render(){
             console.log(this.props.data,'panel');
             return this.props.data.map((item,index)=>{
-              return <ListItem data={item} key={index} />
+              return <ListItem 
+                        data={item} 
+                        key={index} 
+                        onChange={this.changeItem}
+                        index={index}
+                        show={this.state.showList[index]}/>
             }) 
           }
       }
