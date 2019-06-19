@@ -10,8 +10,12 @@ class Footer extends Component {
                 <button style={{display: sLen?'':'none'}} onClick={this.props.removeSelected}>删除选中</button>
                 <button style={{display: sLen?'':'none'}} onClick={this.props.likeSelected}>收藏选中</button>
                 <button style={{display: lLen?'':'none'}} onClick={this.props.removeLike}>取消选中收藏</button>
-                <button onClick={this.props.lookLike} >查看收藏清单</button>
-                <button onClick={this.props.lookAll}>查看所有清单</button>
+                <button style={{display: this.props.listShow && lLen ?'':'none'}} onClick={()=>{
+                    this.props.showList(false);
+                }} >查看收藏清单</button>
+                <button style={{display: !this.props.listShow?'':'none'}} onClick={()=>{
+                    this.props.showList(true);
+                }}>查看所有清单</button>
             </div>
          );
     }

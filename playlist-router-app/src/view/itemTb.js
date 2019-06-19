@@ -25,6 +25,11 @@ class ItemTb extends Component {
                                 checked={item.if_like}
                                 onChange={(e)=>{
                                     this.props.checkOne(item.id,e);
+                                    console.log('pos',this.props.data);
+                                    
+                                    if (!this.props.data.length) {
+                                        this.props.history.push('/');
+                                    }
                                 }}
                                 name="if_like" />
                         </td>

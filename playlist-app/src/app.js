@@ -4,20 +4,24 @@ import Main from './view/main'
 import Footer from './view/footer'
 class App extends Component {
     state = {
+        listState: true,
         data: [],
-        oldData: []
+        dataIndex: 0
     };
     add = (title,singer) => {
+        let ind = this.state.dataIndex;
+        ind += 1;
         this.state.data.push({
             title: title,
             singer: singer,
             if_selected: false,
             if_like: false,
-            if_delete: false
+            if_delete: false,
+            id: ind
         });
         this.setState({
             data: this.state.data,
-            oldData: this.state.data
+            dataIndex: ind
         })
     }
 
@@ -39,8 +43,7 @@ class App extends Component {
             return item;
         })
         this.setState({
-            data: data,
-            oldData: data
+            data: data
         });
     }
    
@@ -49,18 +52,20 @@ class App extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         const data = this.state.data;
-        data[i][name] = value;
+        data.forEach(item=>{
+            if(item.id === i){
+                item[name] = value
+            }
+        });
         this.setState({
-            data: data,
-            oldData: data
+            data: data
         });
     }
 
-    deleteOne = (index)=>{
-       const data = this.state.data.filter((v,i)=> i !== index);
+    deleteOne = (id)=>{
+       const data = this.state.data.filter((v,i)=> v.id !== id);
        this.setState({
-           data: data,
-           oldData: data
+           data: data
        });
        return false;
     }
@@ -68,8 +73,7 @@ class App extends Component {
     removeSelected = () => {
        const data = this.state.data.filter((v, i) => !v.if_selected);
        this.setState({
-           data: data,
-           oldData: data
+           data: data
        });
     }
 
@@ -97,27 +101,34 @@ class App extends Component {
         });
     }
     
-    lookLike = ()=>{
-       const data = this.state.data.filter((v, i) => v.if_like);
-       this.setState({
-           data
-       });
+    showList = (state) => {
+        this.setState({
+           listState: state
+        });
     }
 
-    lookAll = () => {
-        const data = this.state.oldData;
-        this.setState({
-            data
-        });
+    shouldComponentUpdate(nextProps, nextState) {
+        const likeData = this.state.data.filter(v => v.if_like);
+        if(!nextState.listState){
+            if(!likeData.length){
+                this.setState({
+                    listState: true
+                })
+                return false;
+            }
+        }
+        return true;
     }
 
     render() {
         const { data } = this.state;
+        const likeData = data.filter(v=>v.if_like);
+
         return (
             <div className="play-list-wrap">
                 <Header addData={this.add} />
                 <Main 
-                    data={data}
+                    data={this.state.listState?data:likeData}
                     ifCheckAll={this.ifCheckAll}
                     checkAll={this.checkInput}
                     checkOne={this.checkInputOne}
@@ -128,8 +139,8 @@ class App extends Component {
                     removeSelected={this.removeSelected}
                     likeSelected={this.likeSelected}
                     removeLike={this.removeLike}
-                    lookLike={this.lookLike}
-                    lookAll={this.lookAll}
+                    listShow={this.state.listState}
+                    showList={this.showList}
                 />
             </div>
         );

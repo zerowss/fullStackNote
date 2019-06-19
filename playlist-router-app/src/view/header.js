@@ -12,7 +12,7 @@ class Header extends Component {
     render() {
         return (
             <div className="list-header">
-                <h3>播放列表</h3>
+                <h3>增加歌曲</h3>
                 <div>
                     <input
                         type="text"
@@ -39,6 +39,14 @@ class Header extends Component {
                             })
                         }}
                     />
+                    {
+                        this.props.len?
+                            <button onClick={() => {
+                                this.props.history.push('/');
+                            }}>返回</button>:
+                            null
+                    }
+                    
                 </div>
             </div>
         );
