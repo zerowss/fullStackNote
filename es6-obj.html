@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        let obj = {
+            _jk: 2,
+            get foo(){
+                return this._jk;
+            },
+            set foo(x){
+                this._jk = x;
+            },
+            bg: 'ss',
+            hn: [1,2,3],
+            jl: {
+                a:'sds'
+            },
+            [Symbol()]:0
+        }
+        obj.foo = 4;
+
+        const desc = Object.getOwnPropertyDescriptor(obj,'foo');
+        const desc1 = Object.getOwnPropertyDescriptor(obj,'bg');
+        const desc2 = Object.getOwnPropertyDescriptor(obj,'hn');
+        const desc3 = Object.getOwnPropertyDescriptor(obj,'jl');
+        
+        console.log(obj);
+        // console.log(desc);
+        // console.log(desc1);
+        // console.log(desc2);
+        // console.log(desc3);
+
+
+        const a1 = Object.getOwnPropertyNames(obj)
+        const a2 = Object.keys(obj)
+        const a3 = Object.getOwnPropertySymbols(obj)
+        const a4 = Reflect.ownKeys(obj)
+
+        console.log('a1',a1);
+        console.log('a2',a2);
+        console.log('a3',a3);
+        console.log('a4',a4);
+        
+        const aP = {
+            x: 'hello',
+            foo(){
+                console.log(this.x);
+                console.log(this);
+            }
+        }
+        
+        const aC = {
+            x: 'world',
+            foo(){
+                super.foo();
+            }
+        }
+        
+        Object.setPrototypeOf(aC,aP);
+        console.log('s',aC);
+        
+        aC.foo();
+        
+        let obb = { a: { b: 1 } };
+        let { ...x } = obb;
+        obb.a.b = 2;
+        console.log('==',obb.a.b === x.a.b);
+        console.log('==',obb === x);
+        
+        
+        
+
+    </script>
+</body>
+</html>

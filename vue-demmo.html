@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">确定</button>
+    <div id="app"></div>
+    <script>
+        const tit = document.getElementById('app');
+        const defineReactlive = (obj,key,value)=>{
+            Object.defineProperty(obj,key,{
+                get(){
+                    console.log('get',value);
+                    return value;
+                },
+                set(newValue){
+                    value = newValue;
+                    tit.innerText = value;
+                    console.log('set',value);
+                }
+
+            })
+        };
+
+        const observation = (obj)=>{
+            Object.keys(obj).forEach(item=>{
+                console.log('item',item);
+                defineReactlive(obj,item,obj[item])
+            })
+        }
+
+        let data = {
+            title: 'haha'
+        };
+
+        observation(data);
+
+        console.log(data);
+        tit.innerText = data.title;
+        document.getElementById('btn').onclick = ()=>{
+            data.title = 'hello';
+        }
+
+    </script>
+</body>
+</html>
